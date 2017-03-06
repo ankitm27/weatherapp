@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% block content %}
+<div class="container">
+<h1 class="lead">Login</h1>
+{% if error %}
+<div class="alert alert-danger">
+<a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p>{{ error }}</p>
+</div>
+{% endif %}
+<div class="alert alert-danger" hidden="hidden" id="div_error">
+<a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p id="error"></p>
+</div>
+<form action="{% url 'login' %}" method="post" onsubmit="return validateForm();">
+{% render_form serializer template_pack='rest_framework/vertical' %}
+{% csrf_token %}
+<input type="submit" class="btn btn-default" value="Login">
+</form>
+<br>
+</div>
+<script type = "text/javascript">
+//validating all entries are present
+function validateForm(){
+div = document.getElementById('div_error');
+p = document.getElementById('error');
+var username = document.getElementsByName("username")[0].value;
+var password = document.getElementsByName("password")[0].value;
+error = "";
+if ( username == "" || password == "")
+error = "Both fields are required";
+if (error != ''){
+p.innerHTML = error
+div.removeAttribute("hidden");
+return false;
+}
+return true;
+}
+</script>
+{% endblock %}

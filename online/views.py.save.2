@@ -1,0 +1,60 @@
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.views import APIView
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from online.serializers import UserSerializer
+
+class RegisterList(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name='register.html'
+    def get(self,request,format=None):
+        serializer=UserSerializer()
+        return Response({'serializer':serializer})
+    
+    def post(self,request,format=None):
+        serializer=UserSerializer(data=request.data)
+        if not serializer.is_valid():
+	    return Response(serializer.data)
+	serializer.save()
+	return redirect('register')
+
+class RegisterDetail(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'register.html'
+
+    def get_objects(Self,pk):
+	try:
+            return User.objects.get(id=pk)
+	except:
+	    raise Http404
+
+    def get(self,request,pk,format=None):
+        user=self.get_objects(pk)
+        serializer=UserSerializer(user)
+        return Response({'serializer':serializer,'user':user})
+  
+
+    def put(self,request,pk,format=None):
+        user=self.get_objects(pk)
+        serializer=UserSerializer(user,data=request.data)
+        if not serializer.is_valid():
+	    return Response({'serializer':serializer,'user':user})
+	serializer.save()
+	return redirect('register')
+
+    def delete(self,request,pk,format=None):
+	user=self.get_objects(pk)
+	user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Login(APIView):
+    renderer_class = [TemplateHTMLRenderer]
+    template_name='login.html'
+    def get(self,request,format=None):
+        return Response()
+    
+    def post(self,request,format=None):
+        user=User.objects.all()
+        print request.data    

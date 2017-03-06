@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% block content %}
+<div class="container">
+<h1 class="lead">Register</h1>
+{% if error %}
+<div class="alert alert-danger">
+<a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p>{{ error }}</p>
+</div>
+{% endif %}
+<div class="alert alert-danger" hidden="hidden" id="div_error">
+<a href="{% url 'register' %}" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p id="error"></p>
+</div>
+<form action="{% url 'register' %}" method="post" onsubmit="return validateForm();">
+{% render_form serializer %}
+<div class="form-group ">
+<label >Confirm Password</label>
+<input name="confirm_password" class="form-control" type="password" placeholder="Confirm password">
+</div>
+<input type="submit" value="Register" class="btn btn-default">
+</form>
+</div>
+<script type = "text/javascript">
+//validates all fields must be present and passowr and confirm password must be same
+function validateForm(){
+div = document.getElementById('div_error');
+p = document.getElementById('error');
+var username = document.getElementsByName("username")[0].value;
+var email = document.getElementsByName("email")[0].value;
+var password = document.getElementsByName("password")[0].value;
+var confirm_password = document.getElementsByName("confirm_password")[0].value;
+error = "";
+if ( username == "" || email == "" || password == "" || confirm_password == "")
+error = "All field are required";
+if (error == ''){
+if (password != confirm_password )
+error = "Password does not match";
+}
+if (error!=''){
+p.innerHTML = error
+div.removeAttribute("hidden");
+return false;
+}
+return true;
+}
+</script>
+{% endblock %}

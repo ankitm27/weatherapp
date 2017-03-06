@@ -1,0 +1,13 @@
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+from rest_framework.parsers import JSONParser
+from rest_framework import viewsets
+#user/
+
+class registerList(viewsets.ModelViewSet):
+    queryset=User.objects.all()
+    se

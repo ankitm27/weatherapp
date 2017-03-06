@@ -1,0 +1,16 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+<head>
+<title>babu</title>
+<link rel ="stylesheet" type="text/css" href="{% static '/plugin/codemirror/lib/codemirror.css' %}"
+</head>
+<body>
+{% block content %}
+{% endblock %}
+<script src="{% static 'js/jquery.min.js'%}" type="text/javascipt"></script>
+<script src="{% static 'js/<script src="{% static 'js/jquery.min.js'%}" type="text/javascipt"></script>
+'%}" type="text/javascipt"></script>
+<script src="{% static 'js/custom.js'%}" type="text/javascipt"></script>
+</body>
+</html>

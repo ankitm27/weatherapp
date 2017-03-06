@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% block content %}
+<div class="container">
+<h1 class="lead">Profile</h1>
+{% if error %}
+<div class="alert alert-danger">
+<a href="{% url 'profile' %}" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p>{{ error }}</p>
+</div>
+{% endif %}
+<div class="alert alert-danger" hidden="hidden" id="div_error">
+<a href="{% url 'profile' %}" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p id="error"></p>
+</div>
+<form action="{% url 'profile' %}" method="post" onsubmit="return validateForm();">
+{% render_form serializer %}
+{% csrf_token %}
+<input type="submit" value="Update" class="btn btn-default">
+</form>
+</div>
+<script type = "text/javascript">
+document.getElementsByName("username")[0].readOnly = true;
+//validating all fieds must be present
+function validateForm(){
+div = document.getElementById('div_error');
+p = document.getElementById('error');
+var username = document.getElementsByName("username")[0].value;
+var email = document.getElementsByName("email")[0].value;
+var first_name = document.getElementsByName("first_name")[0].value;
+var last_name = document.getElementsByName("last_name")[0].value;
+error = "";
+if ( username == "" || email == "" || first_name == "" || last_name == "")
+error = "All field are required";
+if (error!=''){
+p.innerHTML = error
+div.removeAttribute("hidden");
+return false;
+}
+return true;
+}
+</script>
+{% endblock %}

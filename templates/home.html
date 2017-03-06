@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% load staticfiles %}
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="container">
+<form action="{% url 'home' %}" method="post" onsubmit="return validateForm();" id="form">
+{% csrf_token %}
+<div class="alert alert-danger" hidden="hidden" id="div_error">
+<a href="{% url 'home' %}" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p id="error"></p>
+</div>
+<div class="col-md-12">
+<div class="col-md-8 form-group">
+<div style="float: right;margin-rig	5px;" class = "well">
+<select id="city_name" name="city_name" class="selectpicker" data-live-search="true">
+<option disabled="disabled" value="null" {% if ext %}{% else %}selected="selected"{% endif %} >Select City</option>
+{% for list_item in list_of_city%}
+<option value={{ list_item }}>{{ list_item }}</option>
+{% endfor %}
+</select>
+<select id="category" name="category" class="selectpicker" data-live-search="true">
+<option disabled="disabled" value="null" {% if ext %}{% else %}selected="selected"{% endif %} >Select category</option>
+<option value="tempm">temparature</option>
+<option value="wspdm">Wind Speed</option>
+<option value="hum">humidity</option>
+</select>
+<input type="date" id="date" name="date" class="form-control" max={{ todayDate }} data-date-end-date="0d">
+<input type="date" id="enddate" name="enddate" class="form-control" max={{ todayDate }} data-date-end-date="0d">
+<div class="text-right" class="col-md-12" class="well" style="margin-top: 5px">
+<button type="submit" form="form" value="run" id="run"class="btn btn-default"><span class="fa fa-cog"></span>  Run</button>
+</div></div></div></div></form></div>
+{% if graph %}<div id="chart-1" class="well">{{ output|safe }}</div>{% endif %}
+{% if isError %}
+<div class = "well">
+<h1>{{ isError }}</h1>
+<div>
+{% endif %}
+{% else %}
+<img src="{% static 'img/background.jpg' %}" class="img img-responsive image">
+<div>
+<h1 style="position: absolute; top: 100px; text-align: center;">Weather App</h1>
+</div>
+{% endif %}
+<script type="text/javascript">
+//validating all entries are present,data differnece must be less then 10,end date must be less then 10
+function validateForm(){
+div = document.getElementById('div_error');
+p = document.getElementById('error');
+city_name = document.getElementById('city_name');
+category = document.getElementById('category');
+date = document.getElementById('date').value;
+enddate = document.getElementById('enddate').value;
+function parseDate(str) {
+var mdy = str.split('-');
+console.log(mdy);
+return new Date(mdy[0], mdy[1]-1, mdy[2]);
+}
+function daydiff(first, second) {
+return Math.round((second-first)/(1000*60*60*24));
+}
+value_city = city_name.options[city_name.selectedIndex].value;
+value_category = category.options[category.selectedIndex].value;
+if(value_city == 'null' || value_category == 'null' || date == '' || enddate == ''){
+p.innerHTML = "Please, select all the entries."
+div.removeAttribute("hidden");
+return false;
+}
+num_of_diff_days = daydiff(parseDate(date), parseDate((enddate)));
+if(num_of_diff_days >= 10){
+p.innerHTML = "date range must be of ten days."
+div.removeAttribute("hidden");
+return false;
+}
+if(num_of_diff_days <  0){
+p.innerHTML = "end date must be greater the start date."
+div.removeAttribute("hidden");
+return false;
+}
+return true;
+}
+</script>
+{% endblock %}

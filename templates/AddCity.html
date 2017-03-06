@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% block content %}
+<div class="container">
+<h1 class="lead">AddCity</h1>
+{% if error %}
+<div class="alert alert-danger">
+<a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p>{{ error }}</p>
+</div>
+{% endif %}
+{% if success_message %}
+<div class="alert alert-success">
+<a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p>{{ success_message }}</p>
+</div>
+{% endif %}
+<div class="alert alert-danger" hidden="hidden" id="div_error">
+<a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<p id="error"></p>
+</div>
+<form action="{% url 'AddCity' %}" method="post" onsubmit="return validateForm();">
+{% render_form serializer %}
+{% csrf_token %}
+<input type="submit" class="btn btn-default" value="Submit">
+</form>
+</div>
+<script type = "text/javascript">
+//validaing data,if stationId is blank shows error
+function validateForm(){
+div = document.getElementById('div_error');
+p = document.getElementById('error');
+var city = document.getElementsByName("stationId")[0].value;
+if ( city == ""){
+p.innerHTML = "Please, select all the entries."
+div.removeAttribute("hidden");
+return false;
+}
+return true;
+}
+</script>
+{% endblock %}
