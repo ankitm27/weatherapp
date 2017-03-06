@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## What is this Project all about?
 In this project, I have created a weather app in which user can plot various weather data by selecting parameters like station id, category, range of date.
 
